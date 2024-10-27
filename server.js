@@ -2,7 +2,7 @@ const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
-const TARGET = process.env.TARGET_SERVER || 'http://106.55.56.88:3020';
+const TARGET = process.env.TARGET_SERVER || 'http://182.44.1.58:3000';
 const PORT = process.env.PORT || 3000;
 
 app.use('/', createProxyMiddleware({
