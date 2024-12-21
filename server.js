@@ -2,36 +2,14 @@ const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
-const TARGET = process.env.TARGET_SERVER || 'http://182.44.1.58:3000';
-const PORT = process.env.PORT || 3000;
 
 app.use('/', createProxyMiddleware({
-  target: TARGET,
-  secure: false,
+  target: 'http://182.44.1.58:4000', // 目标 IP 和端口
+  secure: false, // 禁用 SSL 证书验证,用于自签证书
   changeOrigin: true,
-  ws: true,
-  logLevel: 'debug',
-  onError: (err, req, res) => {
-    console.error('Proxy Error:', err);
-    res.status(500).send('Proxy Error');
-  }
+  ws: true, // 支持 WebSocket
 }));
 
-app.use((err, req, res, next) => {
-  console.error('Application Error:', err.stack);
-  res.status(500).send('Something broke!');
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Proxy server is running on port ${PORT}`);
-  console.log(`Proxying to ${TARGET}`);
-});
-
-// 未捕获的异常处理
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Proxy server is running');
 });
